@@ -4,6 +4,7 @@ defmodule Ocb do
   alias Ocb.Options, as: Opt
 
   @build_error %Maven.Result{exit: 1}
+  @ocb_state_file ".ocb"
 
   @moduledoc """
   `ocb` does a local, Karaf based deployment of Opencast Matterhorn.
@@ -25,6 +26,7 @@ defmodule Ocb do
       -T, --disable-test              - disable testing
       -d, --make-dependents           - make dependents of the given modules
       -c, --clean                     - do a clean install
+      -r, --resume                    - resume the last build
       -s, --save-data                 - keep Karaf's data/ directory
                                         between deployments
       -X, --fast-dev                  - fast development mode
@@ -47,6 +49,12 @@ defmodule Ocb do
   In order to save existing data use the `-s` flag.
   A cache deployment on the other hand, only updates the respective bundles
   in Karaf's bundle cache.
+
+  ## Resuming a Build
+
+  In case the last build crashed, a build can be resumed by passing
+  the `-r` option.
+  Where to resume from is stored in the file `#{@ocb_state_file}`.
 
   ## Examples
 
@@ -102,9 +110,16 @@ defmodule Ocb do
           :implicit -> nil
         end
         post_deployment
+        remove_resume_build_info
         0
 
       %Maven.Result{exit: exit} when is_integer(exit) ->
+        case Maven.extract_resume_build(result) do
+          [resume] ->
+            info "The build may be resumed from #{resume}"
+            save_resume_build_info(resume)
+          _ -> nil
+        end
         exit
     end
     opts.save_data && restore_data
@@ -124,6 +139,14 @@ defmodule Ocb do
         {_, 0} = System.cmd(Const.provision_script, [])
       _ -> nil
     end
+  end
+
+  defp save_resume_build_info(artifact) do
+    File.write!(@ocb_state_file, artifact)
+  end
+
+  defp remove_resume_build_info do
+    File.rm(@ocb_state_file)
   end
 
   ###
@@ -273,7 +296,10 @@ defmodule Ocb do
   @spec mvn(list) :: Maven.Result.t
   defp mvn(mvn_opts) do
     info "Run mvn #{join mvn_opts}"
-    filter = &Maven.filter_find_install_jar/1
+    filter =
+      [&Maven.filter_find_install_jar/1,
+       &Maven.filter_resume_build/1]
+      |> Maven.combine_filters
     case Maven.mvn(mvn_opts, filter) do
       r = %Maven.Result{status: :error, exit: exit} ->
         error "Maven exited with #{exit}."
@@ -298,6 +324,16 @@ defmodule Ocb do
   defp to_mvn_opt({:clean, true}), do: ~w(clean install)
   defp to_mvn_opt({:clean, false}), do: ~w(install)
   defp to_mvn_opt({:make_dependents, true}), do: ~w(--also-make-dependents)
+  defp to_mvn_opt({:resume, true}) do
+    case File.read(".ocb") do
+      {:ok, resume} ->
+        info "Resuming build from #{resume}"
+        ~w(-rf :#{resume})
+      _ ->
+        warn "Cannot resume"
+        []
+    end
+  end
   defp to_mvn_opt(_), do: []
 
   #

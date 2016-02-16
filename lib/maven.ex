@@ -48,27 +48,48 @@ defmodule Maven do
     fn line -> funs |> Enum.flat_map(&(&1.(line))) end
   end
 
-  @regex ~r/^\[INFO\] Installing (.*?\.jar) to .*?\.jar$/
   @doc """
   Predefined filter function for `mvn/2` to extract messages about installed jars.
   Use the extractor function `extract_find_install_jar/1` to access findings.
   """
   def filter_find_install_jar(line) do
-    match = @regex |> Regex.run(line)
-    case match do
-      nil -> []
-      [_, jar] -> [installed: jar]
-    end
+    line |> filter_generic(:installed, ~r/^\[INFO\] Installing (.*?\.jar) to .*?\.jar$/)
   end
 
   @doc """
   Extract all findings of the `filter_find_install_jar/1` filter from the `Maven.Result`.
   """
-  def extract_find_install_jar(%Result{filtered: f}) do
-    f |> Enum.flat_map(&do_extract_find_install_jar/1)
+  def extract_find_install_jar(r = %Result{}) do
+    r |> extract_generic(:installed)
   end
 
-  defp do_extract_find_install_jar({:installed, jar}), do: [jar]
+  def filter_resume_build(line) do
+    line |> filter_generic(:resume, ~r/\[ERROR\]\s+mvn <goals> -rf :(.*)/)
+  end
 
-  defp do_extract_find_install_jar(_), do: []
+  def extract_resume_build(r = %Result{}) do
+    r |> extract_generic(:resume)
+  end
+
+  ## Generic filter and extractor functions
+
+  defp extract_generic(%Result{filtered: f}, key) do
+    f |> Enum.flat_map(&(do_extract_generic(&1, key)))
+  end
+
+  defp do_extract_generic(filtered, key) do
+    case filtered do
+      {^key, found} -> [found]
+      _ -> []
+    end
+  end
+
+  # Regex shall contain one matching group
+  defp filter_generic(line, key, regex) when is_atom(key) do
+    match = Regex.run(regex, line)
+    case match do
+      nil -> []
+      [_, found] -> [{key, found}]
+    end
+  end
 end

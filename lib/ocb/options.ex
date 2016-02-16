@@ -14,7 +14,8 @@ defmodule Ocb.Options do
       disable_checkstyle: false,
       make_dependents: false,
       clean: false,
-      save_data: false
+      save_data: false,
+      resume: false
     ]
 
     @type t :: %__MODULE__{}
@@ -32,7 +33,8 @@ defmodule Ocb.Options do
     {:save_data, :s, :boolean},
     {:fast_dev, :X, :boolean},
     {:full_dev, :F, :boolean},
-    {:fast_rebuild, :R, :boolean}
+    {:fast_rebuild, :R, :boolean},
+    {:resume, :r, :boolean}
   ]
 
   @combined_options [
@@ -93,7 +95,8 @@ defmodule Ocb.Options do
       disable_checkstyle: Keyword.get(options, :disable_checkstyle, false),
       make_dependents: Keyword.get(options, :make_dependents, false),
       clean: Keyword.get(options, :clean, false),
-      save_data: save_data
+      save_data: save_data,
+      resume: Keyword.get(options, :resume, false)
     }
   end
 
