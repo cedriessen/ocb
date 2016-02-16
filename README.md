@@ -13,6 +13,11 @@ The only requirement to build and run the tool is [Elixir](http://elixir-lang.or
 
     $ brew update
     $ brew install elixir
+    
+### Other Platforms
+    
+See Elixir's [installation](http://elixir-lang.org/install.html) instructions how to
+install Elixir on other platforms.
 
 ## Install
 
