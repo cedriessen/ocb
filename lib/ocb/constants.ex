@@ -12,7 +12,8 @@ defmodule Ocb.Constants do
   def work_dir, do: File.cwd!
   def build_target, do: Path.join(work_dir, "build")
   def save_data_directory, do: Path.join(System.tmp_dir!, "mh-build-tmp")
-  def provision_script, do: "mh_build.provision"
+  def provision_script, do: ".ocb.provision"
+  def ocb_state_file, do: ".ocb"
 
   def karaf_executable, do: Karaf.Files.karaf_executable(build_target)
 #  def karaf_data_directory, do: Karaf.Files.data_directory(build_target)

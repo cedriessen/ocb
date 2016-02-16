@@ -3,13 +3,14 @@ defmodule Ocb do
   alias Ocb.Constants, as: Const
   alias Ocb.Options, as: Opt
 
-  @build_error %Maven.Result{exit: 1}
-  @ocb_state_file ".ocb"
+  @build_error %Maven.Result{exit: 1, status: :error}
 
   @moduledoc """
   `ocb` does a local, Karaf based deployment of Opencast Matterhorn.
 
   ## Usage
+
+  Always run `ocb` from the root of you work directory.
 
       ocb                             - print this help
       ocb module1 module2 ...         - build and deploy only the given modules
@@ -44,7 +45,7 @@ defmodule Ocb do
   ## Provisioning
 
   To automatically provision a deployment, place an executable file called
-  `ocb.provision` into the directory where you run `ocb` from.
+  `#{Const.provision_script}` into the directory where you run `ocb` from.
   It will then run after a successful deployment.
 
   ## Full Deployment vs Cache Deployment
@@ -59,7 +60,7 @@ defmodule Ocb do
 
   In case the last build crashed, a build can be resumed by passing
   the `-r` option.
-  Where to resume from is stored in the file `#{@ocb_state_file}`.
+  Where to resume from is stored in the file `#{Const.ocb_state_file}`.
 
   ## Examples
 
@@ -118,12 +119,13 @@ defmodule Ocb do
         remove_resume_build_info
         0
 
-      %Maven.Result{exit: exit} when is_integer(exit) ->
-        case Maven.extract_resume_build(result) do
+      r = %Maven.Result{exit: exit} when is_integer(exit) ->
+        case Maven.extract_resume_build(r) do
           [resume] ->
             info "The build may be resumed from #{resume}"
             save_resume_build_info(resume)
-          _ -> nil
+          _ ->
+            nil
         end
         exit
     end
@@ -147,11 +149,11 @@ defmodule Ocb do
   end
 
   defp save_resume_build_info(artifact) do
-    File.write!(@ocb_state_file, artifact)
+    File.write!(Const.ocb_state_file, artifact)
   end
 
   defp remove_resume_build_info do
-    File.rm(@ocb_state_file)
+    File.rm(Const.ocb_state_file)
   end
 
   ###
