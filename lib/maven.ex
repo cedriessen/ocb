@@ -10,9 +10,9 @@ defmodule Maven do
     Result of running Maven.
     """
 
-    defstruct [:status, :exit, :filtered]
+    defstruct status: nil, exit: nil, filtered: []
 
-    @type t :: %__MODULE__{}
+    @type t :: %__MODULE__{status: :error | :ok, exit: non_neg_integer, filtered: list(String.t)}
   end
 
   @mvn "mvn"
