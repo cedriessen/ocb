@@ -77,7 +77,7 @@ defmodule Ocb do
   def process(args)
 
   def process(:help) do
-    IO.ANSI.Docs.print_heading "MH BUILD"
+    IO.ANSI.Docs.print_heading "OCB"
     IO.ANSI.Docs.print @moduledoc
     0
   end
