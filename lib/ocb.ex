@@ -3,6 +3,8 @@ defmodule Ocb do
   alias Ocb.Constants, as: Const
   alias Ocb.Options, as: Opt
 
+  @build_error %Maven.Result{exit: 1}
+
   @moduledoc """
   `ocb` does a local, Karaf based deployment of Opencast Matterhorn.
 
@@ -158,13 +160,13 @@ defmodule Ocb do
         - run a full build
         - start Karaf
         """
-        %Maven.Result{exit: 1}
+        @build_error
 
       modified_modules ->
         case modified_modules ++ opts.modules do
           [] ->
             warn "No modified modules."
-            %Maven.Result{exit: 1}
+            @build_error
           modules ->
             infob modules
             build_modules(Map.put(opts, :modules, modules))
@@ -181,16 +183,19 @@ defmodule Ocb do
   end
 
   def build_modules(opts) do
-    opts
-    |> mk_maven_opts
-    |> Enum.concat(~w(--projects #{join opts.modules, sep: ","}))
-    |> mvn
+    build_with_maven(opts, ~w(--projects #{join opts.modules, sep: ","}))
   end
 
   def build_all(opts) do
+    build_with_maven(opts, ~w(-DdeployTo=#{Const.build_target} -Pmodules,entwine))
+  end
+
+  # Run a maven build. Transform opts into maven options and add them to the list of mvn_opts.
+  @spec build_with_maven(Ocb.Options.Opts.t, list(String.t)) :: Maven.Result.t
+  defp build_with_maven(opts, mvn_opts) do
     opts
     |> mk_maven_opts
-    |> Enum.concat(~w(-DdeployTo=#{Const.build_target} -Pmodules,entwine))
+    |> Enum.concat(mvn_opts)
     |> mvn
   end
 
@@ -265,13 +270,11 @@ defmodule Ocb do
     end
   end
 
-  @doc """
-  The `filtered` field of the result type contains a list of created jars.
-  """
   @spec mvn(list) :: Maven.Result.t
   defp mvn(mvn_opts) do
     info "Run mvn #{join mvn_opts}"
-    case Maven.mvn(mvn_opts, &Maven.filter_find_install_jar/1) do
+    filter = &Maven.filter_find_install_jar/1
+    case Maven.mvn(mvn_opts, filter) do
       r = %Maven.Result{status: :error, exit: exit} ->
         error "Maven exited with #{exit}."
         r

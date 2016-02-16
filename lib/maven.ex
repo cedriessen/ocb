@@ -44,6 +44,10 @@ defmodule Maven do
   # Filters & extractors
   ###
 
+  def combine_filters(funs) do
+    fn line -> funs |> Enum.flat_map(&(&1.(line))) end
+  end
+
   @regex ~r/^\[INFO\] Installing (.*?\.jar) to .*?\.jar$/
   @doc """
   Predefined filter function for `mvn/2` to extract messages about installed jars.
