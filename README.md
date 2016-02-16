@@ -12,17 +12,21 @@ The only requirement to build and run the tool is [Elixir](http://elixir-lang.or
     $ brew update
     $ brew install elixir
 
-## Build
+## Install
+
+Clone the repo
+
+    $ git clone https://github.com/cedriessen/ocb.git
 
 Build the tool with
 
     $ mix deps.get
     $ mix escript.build
-     
+
 Then put it on your path. 
-     
+
     $ export $PATH:/path/to/ocb
-     
+
 ## Use
 
 Get a comprehensive help with
