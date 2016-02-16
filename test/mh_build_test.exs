@@ -35,14 +35,13 @@ defmodule OcbTest do
       }},
       {~w(--fast-dev), {
         %Opts{
-          build: :all, deployment: :implicit,
-          disable_checkstyle: true, disable_test: true, save_data: true},
+          build: :modified, deployment: :cache, disable_checkstyle: true, disable_test: true},
         ~w(-Dcheckstyle.skip=true -DskipTests=true install)
       }},
       {~w(--fast-dev module1 module2), {
         %Opts{
-          build: :selected, clean: false, deployment: :cache, disable_checkstyle: true,
-          disable_test: true, make_dependents: false, modules: ~w(module1 module2), save_data: false},
+          build: :modified, clean: false, deployment: :cache, disable_checkstyle: true,
+          disable_test: true, make_dependents: false, modules: ~w(module1 module2)},
         ~w(-Dcheckstyle.skip=true -DskipTests=true install)
       }},
       {~w(--fast-dev -s -a), {
@@ -53,13 +52,13 @@ defmodule OcbTest do
       }},
       {~w(-X module1), {
         %Opts{
-          build: :selected, clean: false, deployment: :cache, disable_checkstyle: true,
+          build: :modified, clean: false, deployment: :cache, disable_checkstyle: true,
           disable_test: true, make_dependents: false, modules: ["module1"], save_data: false},
         ~w(-Dcheckstyle.skip=true -DskipTests=true install)
       }},
       {~w(-X module1 -f), {
         %Opts{
-          build: :selected, clean: false, deployment: :full, disable_checkstyle: true,
+          build: :modified, clean: false, deployment: :full, disable_checkstyle: true,
           disable_test: true, make_dependents: false, modules: ["module1"], save_data: true},
         ~w(-Dcheckstyle.skip=true -DskipTests=true install)
       }},

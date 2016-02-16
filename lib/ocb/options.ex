@@ -38,7 +38,7 @@ defmodule Ocb.Options do
   ]
 
   @combined_options [
-    fast_dev: [disable_test: true, disable_checkstyle: true, build_modified: true],
+    fast_dev: [disable_test: true, disable_checkstyle: true, build_modified: true, save_data: true],
     full_dev: [disable_test: true, disable_checkstyle: true, save_data: true, full_deployment: true],
     fast_rebuild: [disable_test: true, disable_checkstyle: true, full_build: true, clean: true]
   ]
@@ -77,6 +77,7 @@ defmodule Ocb.Options do
       {_, true, _, _} -> {:implicit, :all, []}
       {_, false, false, []} -> {:implicit, :all, []}
       {_, _, true, []} -> {:cache, :modified, []}
+      {true, _, true, m} -> {:full, :modified, m}
       {_, _, true, m} -> {:cache, :modified, m}
       {true, false, _, m} -> {:full, :selected, m}
       {_, false, _, m} -> {:cache, :selected, m}

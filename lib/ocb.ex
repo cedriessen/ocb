@@ -14,7 +14,7 @@ defmodule Ocb do
       ocb                             - print this help
       ocb module1 module2 ...         - build and deploy only the given modules
 
-  ## Options
+  ## Single Options
 
       -h, --help                      - print this help
       -a, --build-all                 - build all modules including
@@ -29,10 +29,15 @@ defmodule Ocb do
       -r, --resume                    - resume the last build
       -s, --save-data                 - keep Karaf's data/ directory
                                         between deployments
+
+  ## Combined Options
+
+  Please note that combined options take precedence over single ones.
+
       -X, --fast-dev                  - fast development mode
-                                        Equal to -C -T -m
+                                        Equal to -C -T -s -m
       -F, --full-dev                  - full development mode
-                                        Equal to -C -T -s -f -m
+                                        Equal to -C -T -s -m -f
       -R, --fast-rebuild              - do a fast rebuild
                                         Equal to -C -T -c -a
 
