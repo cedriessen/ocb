@@ -90,9 +90,12 @@ defmodule Ocb do
     result = build(opts)
     # handle the result
     exit = case result do
-      %Maven.Result{status: :ok, filtered: jars} ->
+      %Maven.Result{status: :ok} ->
         case opts.deployment do
-          :cache -> deployment_cache(jars)
+          :cache ->
+            result
+            |> Maven.extract_find_install_jar
+            |> deployment_cache
           :full -> deployment_full
           :implicit -> nil
         end

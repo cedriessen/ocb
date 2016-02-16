@@ -40,15 +40,31 @@ defmodule Maven do
     end
   end
 
+  ###
+  # Filters & extractors
+  ###
+
   @regex ~r/^\[INFO\] Installing (.*?\.jar) to .*?\.jar$/
   @doc """
   Predefined filter function for `mvn/2` to extract messages about installed jars.
+  Use the extractor function `extract_find_install_jar/1` to access findings.
   """
   def filter_find_install_jar(line) do
     match = @regex |> Regex.run(line)
     case match do
       nil -> []
-      [_, jar] -> [jar]
+      [_, jar] -> [installed: jar]
     end
   end
+
+  @doc """
+  Extract all findings of the `filter_find_install_jar/1` filter from the `Maven.Result`.
+  """
+  def extract_find_install_jar(%Result{filtered: f}) do
+    f |> Enum.flat_map(&do_extract_find_install_jar/1)
+  end
+
+  defp do_extract_find_install_jar({:installed, jar}), do: [jar]
+
+  defp do_extract_find_install_jar(_), do: []
 end
