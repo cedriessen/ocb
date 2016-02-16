@@ -1,6 +1,8 @@
 %{"combine": {:hex, :combine, "0.7.0"},
   "dialyze": {:hex, :dialyze, "0.2.0"},
   "dir_walker": {:git, "https://github.com/pragdave/dir_walker.git", "b34b1b6a9bfcbc1e5d0bbfcd7d8549952f601469", [ref: "b34b1b6a9bfcbc1e5d0bbfcd7d8549952f601469"]},
+  "inch_ex": {:hex, :inch_ex, "0.5.1"},
+  "poison": {:hex, :poison, "2.1.0"},
   "porcelain": {:hex, :porcelain, "2.0.1"},
   "timex": {:hex, :timex, "1.0.1"},
   "tzdata": {:hex, :tzdata, "0.1.8"}}

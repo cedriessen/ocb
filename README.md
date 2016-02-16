@@ -1,5 +1,7 @@
 # Opencast Build
 
+[![Inline docs](http://inch-ci.org/github/cedriessen/ocb.svg)](http://inch-ci.org/github/cedriessen/ocb)
+
 `ocb` is a build tool to speed up development of the [Karaf](http://karaf.apache.org) based version of Opencast 
 Matterhorn.
 

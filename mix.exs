@@ -36,7 +36,8 @@ defmodule Ocb.Mixfile do
       {:timex, "~> 1.0.1"},
       # Use Tzdata 0.1.8 since the latest version has issues with escript builds.
       # See https://github.com/bitwalker/timex/issues/86
-      {:tzdata, "~> 0.1.8", override: true}
+      {:tzdata, "~> 0.1.8", override: true},
+      {:inch_ex, only: :docs}
     ]
   end
 end
