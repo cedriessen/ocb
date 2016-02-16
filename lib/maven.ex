@@ -18,6 +18,7 @@ defmodule Maven do
   @mvn "mvn"
 
   @doc """
+  Run maven with the given options `mvn_opts` and an optional filter function `filter`.
   """
   @spec mvn(list(String.t), (String.t -> list)) :: Maven.Result.t
   def mvn(mvn_opts, filter \\ &([&1])) do
@@ -40,6 +41,9 @@ defmodule Maven do
   end
 
   @regex ~r/^\[INFO\] Installing (.*?\.jar) to .*?\.jar$/
+  @doc """
+  Predefined filter function for `mvn/2` to extract messages about installed jars.
+  """
   def filter_find_install_jar(line) do
     match = @regex |> Regex.run(line)
     case match do
