@@ -163,7 +163,7 @@ defmodule Ocb do
             warn "No modified modules."
             %Maven.Result{exit: 1}
           modules ->
-            infob Enum.join(modules, ", ")
+            infob modules
             build_modules(Map.put(opts, :modules, modules))
         end
     end

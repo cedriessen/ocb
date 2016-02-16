@@ -17,6 +17,10 @@ defmodule ColorPrint do
     end
   end
 
+  def infob(strings) when is_list(strings) do
+    strings |> Enum.each(&infob/1)
+  end
+
   def infob(string) do
     IO.puts("  " <> string)
   end
