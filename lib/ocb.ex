@@ -87,7 +87,8 @@ defmodule Ocb do
   ###
 
   @doc """
-  Return an exit code.
+  First step in request processing.
+  Return an exit code to report back to the caller.
   """
   @spec process(:help | Opt.Opts.t) :: non_neg_integer
   def process(args)
@@ -95,6 +96,15 @@ defmodule Ocb do
   def process(:help) do
     IO.ANSI.Docs.print_heading "OCB"
     IO.ANSI.Docs.print @moduledoc
+    0
+  end
+
+  def process(:update) do
+    case Ocb.Updater.update do
+      {:error, msg} -> error "Cannot update: #{msg}"
+      {:ok, :up_to_date} -> info "ocb is up to date"
+      {:ok, git_hash} -> info "Updated ocb to version #{git_hash}"
+    end
     0
   end
 

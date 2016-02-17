@@ -34,7 +34,8 @@ defmodule Ocb.Options do
     {:fast_dev, :X, :boolean},
     {:full_dev, :F, :boolean},
     {:fast_rebuild, :R, :boolean},
-    {:resume, :r, :boolean}
+    {:resume, :r, :boolean},
+    {:update, :boolean}
   ]
 
   @combined_options [
@@ -49,14 +50,12 @@ defmodule Ocb.Options do
   @spec parse_args(list(String.t)) :: Ocb.Options.Opts.t
   def parse_args(args) do
     Agent.start_link(fn -> %Opts{} end, name: __MODULE__)
+    Agent.update(__MODULE__, fn _ -> %Opts{} end)
     parser_opts = build_parser_opts(@options)
     case OptionParser.parse(args, parser_opts) do
-      {[], [], _} ->
-        Agent.update(__MODULE__, fn _ -> %Opts{} end)
-        :help
-      {[help: true], _, _} ->
-        Agent.update(__MODULE__, fn _ -> %Opts{} end)
-        :help
+      {[update: true], _, _} -> :update
+      {[], [], _} -> :help
+      {[help: true], _, _} -> :help
       {options, modules, _} ->
         opts = process_options(options, modules)
         Agent.update(__MODULE__, fn _ -> opts end)
