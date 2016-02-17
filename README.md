@@ -27,6 +27,7 @@ Clone the repo
 
 Build the tool with
 
+    $ cd ocb
     $ mix deps.get
     $ mix escript.build
 
@@ -82,7 +83,7 @@ A deployment, done by maven cleans out the whole `data/` directory. This is some
 all your previously entered test data is gone. So let's start over...
 
     $ ocb -m
-    OR
+    >> OR <<
     $ ocb -s -a
      
 **Save some time with deployments**
