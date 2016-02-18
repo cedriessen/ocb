@@ -22,7 +22,7 @@ defmodule Ocb.Updater do
       git_hash ->
         git(~w(checkout master))
         git(~w(pull --prune))
-        {_, 0} = cmd("mix", ~w(escript.build))
+        cmd("mix", ~w(escript.build))
         git_hash
     end
   end
@@ -33,10 +33,11 @@ defmodule Ocb.Updater do
     version |> String.strip
   end
 
-  # run git with the given arguments
+  # Run git with the given arguments and return its output.
   defp git(args), do: cmd("git", args)
 
-  # run `cmd` in the fixed @home_dir
+  # Run `cmd` in the fixed @home_dir, require the command to exit with 0.
+  # Extract and return the command output.
   defp cmd(cmd, args) do
     {result, 0} = System.cmd(cmd, args, cd: @home_dir)
     result
