@@ -21,7 +21,7 @@ install Elixir on other platforms.
 
 ## Install
 
-Clone the repo
+Clone the repo.
 
     $ git clone https://github.com/cedriessen/ocb.git
 
@@ -34,6 +34,12 @@ Build the tool with
 Then put it on your path. 
 
     $ export $PATH:/path/to/ocb
+    
+## Get Updates
+
+The current version number is shown in the header of the help screen. Get an update with
+    
+    $ ocb --update
 
 ## Use
 
