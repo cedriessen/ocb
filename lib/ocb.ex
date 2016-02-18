@@ -94,16 +94,15 @@ defmodule Ocb do
   def process(args)
 
   def process(:help) do
-    IO.ANSI.Docs.print_heading "OCB"
+    IO.ANSI.Docs.print_heading "OCB #{Ocb.Updater.version}"
     IO.ANSI.Docs.print @moduledoc
     0
   end
 
   def process(:update) do
     case Ocb.Updater.update do
-      {:error, msg} -> error "Cannot update: #{msg}"
-      {:ok, :up_to_date} -> info "ocb is up to date"
-      {:ok, git_hash} -> info "Updated ocb to version #{git_hash}"
+      :up_to_date -> info "ocb is up to date"
+      git_hash -> info "Updated ocb to version #{git_hash}"
     end
     0
   end
