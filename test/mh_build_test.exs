@@ -9,6 +9,7 @@ defmodule OcbTest do
       {~w(--help), :help},
       {~w(-h), :help},
       {~w(-h -x), :help},
+      {~w(--bash-complete), :bash_complete},
       {~w(-h -C), {
         %Opts{build: :all, deployment: :implicit, disable_checkstyle: true},
         ~w(install -Dcheckstyle.skip=true -DskipTests=false)

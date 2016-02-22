@@ -35,6 +35,13 @@ Then put it on your path.
 
     $ export $PATH:/path/to/ocb
     
+### Bash Completion
+
+In order to enable Bash completion for `ocb` you may want to add the following line to you 
+`.profile` or `.bash_profile`.
+     
+     source ocb-complete.sh     
+    
 ## Get Updates
 
 The current version number is shown in the header of the help screen. Get an update with

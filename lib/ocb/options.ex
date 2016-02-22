@@ -35,7 +35,8 @@ defmodule Ocb.Options do
     {:full_dev, :F, :boolean},
     {:fast_rebuild, :R, :boolean},
     {:resume, :r, :boolean},
-    {:update, :boolean}
+    {:update, :boolean},
+    {:bash_complete, :boolean}
   ]
 
   @combined_options [
@@ -56,11 +57,24 @@ defmodule Ocb.Options do
       {[update: true], _, _} -> :update
       {[], [], _} -> :help
       {[help: true], _, _} -> :help
+      {[bash_complete: true], _, _} -> :bash_complete
       {options, modules, _} ->
         opts = process_options(options, modules)
         Agent.update(__MODULE__, fn _ -> opts end)
         opts
     end
+  end
+
+  @doc """
+  Return a list of available options for bash complete.
+  """
+  def bash_complete do
+    @options
+    |> Enum.flat_map(
+         fn {:bash_complete, _} -> []
+            opt -> ["--#{elem(opt, 0)}"]
+         end)
+    |> Enum.join(" ")
   end
 
   defp process_options(options, modules) do

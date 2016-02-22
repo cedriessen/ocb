@@ -107,6 +107,11 @@ defmodule Ocb do
     0
   end
 
+  def process(:bash_complete) do
+    IO.puts Ocb.Options.bash_complete
+    0
+  end
+
   def process(opts) do
     info "Build opts", block: show_opts(opts)
     Karaf.Cache.start_link(Const.build_target)
