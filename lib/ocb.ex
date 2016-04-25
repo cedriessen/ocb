@@ -42,6 +42,14 @@ defmodule Ocb do
       -R, --fast-rebuild              - do a fast rebuild
                                         Equal to -C -T -c -a
 
+  ## Build Target
+
+  You may set the build target directory by setting the environment variable
+
+      OCB_BUILD_TARGET
+
+  If the variable is not set, the build target is set to `$CWD/build`.
+
   ## Provisioning
 
   To automatically provision a deployment, place an executable file called
